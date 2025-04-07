@@ -29,6 +29,11 @@ const StaffLogin = () => {
     }
   };
 
+  // Go back to main page (Welcome screen)
+  const handleGoBack = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <h2>Staff Login</h2>
@@ -53,6 +58,12 @@ const StaffLogin = () => {
         </div>
         <button onClick={handleLogin}>Login</button>
       </form>
+
+      {/* Go back to main page button */}
+      <div style={{ marginTop: "20px" }}>
+        <p>Not a staff member?</p>
+        <button onClick={handleGoBack}>Go back to the main page</button>
+      </div>
     </div>
   );
 };

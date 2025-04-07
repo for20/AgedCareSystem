@@ -6,7 +6,7 @@ const Welcome = () => {
 
   return (
     <div>
-      <h1>Welcome to the ACM Portal</h1>
+      <h1>Welcome to the ACMS Portal</h1>
       <p>Please log in to continue</p>
 
       <div style={{ display: "flex", gap: "20px", marginTop: "30px" }}>

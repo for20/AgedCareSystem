@@ -1,40 +1,79 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/firebase"; // Correct import for firebase
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/firebase";
 
 const MemberLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/members"); // Navigate to the members dashboard
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (!userDoc.exists()) {
+        alert("User role not found.");
+        return;
+      }
+
+      const userData = userDoc.data();
+
+      if (userData.role !== "member") {
+        alert("Access denied: You are not a member.");
+        return;
+      }
+
+      navigate("/members/dashboard");
+
     } catch (error) {
-      alert("Error: " + error.message);
+      console.error("Login error:", error.message);
+      alert("Login failed: " + error.message);
     }
+  };
+
+  const handleGoBack = () => {
+    navigate("/");
   };
 
   return (
     <div>
-      <h1>Member Login</h1>
+      <h2>Member Login</h2>
       <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div>
+          <label>Email:</label><br />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <label>Password:</label><br />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
         <button type="submit">Login</button>
       </form>
+
+      <div style={{ marginTop: "20px" }}>
+        <p>Not a member?</p>
+        <button onClick={handleGoBack}>Go back to the main page</button>
+      </div>
     </div>
   );
 };

@@ -1,24 +1,36 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Welcome from './pages/welcome';  // Import the welcome page from the pages folder
-import AdminLogin from './pages/adminlogin';  // Import the admin login page from the pages folder
-import StaffLogin from './pages/stafflogin';  // Import the staff login page from the pages folder
-import MemberLogin from './pages/memberlogin';  // Import the member login page from the pages folder
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-function App() {
+import Welcome from "./pages/welcome";
+import MemberLogin from "./pages/memberlogin";
+import StaffLogin from "./pages/stafflogin";
+import AdminLogin from "./pages/adminlogin";
+
+import AdminHome from "./pages/admin/adminhome";
+import AdminUserRegistration from "./pages/admin/adminuserregistration";
+
+import ChiefHome from "./pages/admin/chiefhome";
+import UserRegistration from "./pages/admin/chiefuserregistration";
+
+const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Welcome page route */}
         <Route path="/" element={<Welcome />} />
-
-        {/* Login routes for Admin, Staff, and Members */}
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/staff" element={<StaffLogin />} />
         <Route path="/members" element={<MemberLogin />} />
+        <Route path="/staff" element={<StaffLogin />} />
+        <Route path="/admin" element={<AdminLogin />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/createuser" element={<AdminUserRegistration />} />
+
+        {/* Chief Routes */}
+        <Route path="/chief/userregistration" element={<UserRegistration />} />
+        <Route path="/chief/home" element={<ChiefHome />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

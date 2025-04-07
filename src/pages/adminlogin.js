@@ -2,39 +2,55 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";  // Correct import path
+import { auth, db } from "../firebase/firebase";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (!userDoc.exists()) throw new Error("User role not found");
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
 
-      const userData = userDoc.data();
-      if (userData.role !== "admin") {
-        throw new Error("Unauthorized: You are not an admin.");
+      if (!userDoc.exists()) {
+        alert("User role not found.");
+        return;
       }
 
-      // Redirect to the admin dashboard
-      navigate("/admin/dashboard");
-    } catch (err) {
-      alert(err.message);
+      const userData = userDoc.data();
+
+      // Allow access if role is "admin" or "chief"
+      if (userData.role === "chief" && user.email === "chief@acms.com") {
+        navigate("/chief/home"); // Chief goes to user creation page
+      } else if (userData.role === "admin") {
+        navigate("/admin/home"); // Normal admin route
+      } else {
+        alert("Access denied: You are not an admin.");
+      }
+
+    } catch (error) {
+      console.error("Login error:", error.message);
+      alert("Login failed: " + error.message);
     }
+  };
+
+  const handleGoBack = () => {
+    navigate("/");
   };
 
   return (
     <div>
       <h2>Admin Login</h2>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleLogin}>
         <div>
-          <label>Email: </label>
+          <label>Email:</label><br />
           <input
             type="email"
             value={email}
@@ -42,8 +58,9 @@ const AdminLogin = () => {
             required
           />
         </div>
+
         <div>
-          <label>Password: </label>
+          <label>Password:</label><br />
           <input
             type="password"
             value={password}
@@ -51,8 +68,14 @@ const AdminLogin = () => {
             required
           />
         </div>
-        <button onClick={handleLogin}>Login</button>
+
+        <button type="submit">Login</button>
       </form>
+
+      <div style={{ marginTop: "20px" }}>
+        <p>Need to go back?</p>
+        <button onClick={handleGoBack}>Go back to the main page</button>
+      </div>
     </div>
   );
 };
