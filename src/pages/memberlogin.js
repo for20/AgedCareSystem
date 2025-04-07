@@ -1,50 +1,42 @@
 import React, { useState } from "react";
-import { auth } from "../firebase/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/firebase"; // Correct import for firebase
 
-function Login() {
+const MemberLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Login Successful!");
-      navigate("/dashboard"); // Redirect after login
+      navigate("/members"); // Navigate to the members dashboard
     } catch (error) {
-      setError(error.message);
+      alert("Error: " + error.message);
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <h1>Member Login</h1>
       <form onSubmit={handleLogin}>
         <input
           type="email"
-          placeholder="Enter your email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
         />
-        <br />
         <input
           type="password"
-          placeholder="Enter your password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
-        <br />
         <button type="submit">Login</button>
       </form>
     </div>
   );
-}
+};
 
-export default Login;
+export default MemberLogin;

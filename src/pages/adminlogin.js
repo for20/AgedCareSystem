@@ -1,40 +1,58 @@
-import React, { useState } from 'react';
-import { auth } from '../firebase/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/firebase";  // Correct import path
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Login successful!");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) throw new Error("User role not found");
+
+      const userData = userDoc.data();
+      if (userData.role !== "admin") {
+        throw new Error("Unauthorized: You are not an admin.");
+      }
+
+      // Redirect to the admin dashboard
+      navigate("/admin/dashboard");
     } catch (err) {
-      setError(err.message);
+      alert(err.message);
     }
   };
 
   return (
     <div>
       <h2>Admin Login</h2>
-      <input
-        type="email"
-        placeholder="Enter your admin email"
-        onChange={(e) => setEmail(e.target.value)}
-      /><br />
-      <input
-        type="password"
-        placeholder="Enter your password"
-        onChange={(e) => setPassword(e.target.value)}
-      /><br />
-      <button onClick={handleLogin}>Admin Login</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <p>You are not an admin of the system? Return to the home page to find your login path.</p>
-      <button onClick={() => navigate('/')}>Go back to Home</button>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <div>
+          <label>Email: </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Password: </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button onClick={handleLogin}>Login</button>
+      </form>
     </div>
   );
 };

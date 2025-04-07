@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Welcome = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <h1>Welcome to the ACM Portal</h1>
@@ -14,7 +17,7 @@ const Welcome = () => {
             If you're an elderly resident or a family member supporting a loved
             one, please log in through here to stay connected and informed.
           </p>
-          <button>Members Login</button>
+          <button onClick={() => navigate("/members")}>Members Login</button>
         </div>
 
         {/* Staff Card */}
@@ -24,7 +27,7 @@ const Welcome = () => {
             If you’re a caregiver, doctor, or part of our dedicated support
             team, please log in here to manage care and daily operations.
           </p>
-          <button>Staff Login</button>
+          <button onClick={() => navigate("/staff")}>Staff Login</button>
         </div>
 
         {/* Admin Card */}
@@ -34,7 +37,7 @@ const Welcome = () => {
             If you are a system administrator, please log in here to access
             backend controls and manage system settings.
           </p>
-          <button>Admin Login</button>
+          <button onClick={() => navigate("/admin")}>Admin Login</button>
         </div>
       </div>
     </div>
