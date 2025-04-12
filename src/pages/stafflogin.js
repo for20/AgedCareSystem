@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";  // Correct import path
+import { auth, db } from "../firebase/firebase";
 
 const StaffLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -18,18 +20,25 @@ const StaffLogin = () => {
       if (!userDoc.exists()) throw new Error("User role not found");
 
       const userData = userDoc.data();
-      if (userData.role !== "staff") {
-        throw new Error("Unauthorized: You are not a staff member.");
+      const role = userData.role;
+
+      if (role === "manager") {
+        navigate("/staff/managerhome");
+      } else if (role === "doctor") {
+        navigate("/staff/doctorhome");
+      } else if (role === "caregiver") {
+        navigate("/staff/caregiverhome");
+      } else if (role === "minor_staff") {
+        navigate("/staff/minorstaffhome");
+      } else {
+        throw new Error("Access denied: You are not a staff member.");
       }
 
-      // Redirect to the staff dashboard
-      navigate("/staff/dashboard");
     } catch (err) {
       alert(err.message);
     }
   };
 
-  // Go back to main page (Welcome screen)
   const handleGoBack = () => {
     navigate("/");
   };
@@ -37,9 +46,9 @@ const StaffLogin = () => {
   return (
     <div>
       <h2>Staff Login</h2>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleLogin}>
         <div>
-          <label>Email: </label>
+          <label>Email:</label><br />
           <input
             type="email"
             value={email}
@@ -47,8 +56,9 @@ const StaffLogin = () => {
             required
           />
         </div>
+
         <div>
-          <label>Password: </label>
+          <label>Password:</label><br />
           <input
             type="password"
             value={password}
@@ -56,11 +66,11 @@ const StaffLogin = () => {
             required
           />
         </div>
-        <button onClick={handleLogin}>Login</button>
+
+        <button type="submit">Login</button>
       </form>
 
-      {/* Go back to main page button */}
-      <div style={{ marginTop: "20px" }}>
+      <div>
         <p>Not a staff member?</p>
         <button onClick={handleGoBack}>Go back to the main page</button>
       </div>

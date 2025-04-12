@@ -24,17 +24,18 @@ const MemberLogin = () => {
         return;
       }
 
-      const userData = userDoc.data();
+      const role = userDoc.data().role;
 
-      if (userData.role !== "member") {
+      if (role === "family") {
+        navigate("/members/familyhome");
+      } else if (role === "elderly_on_site") {
+        navigate("/members/elderlyonsitehome");
+      } else if (role === "elderly_in_home") {
+        navigate("/members/elderlyinhome/dashboard"); // FIXED: goes to the page with nav
+      } else {
         alert("Access denied: You are not a member.");
-        return;
       }
-
-      navigate("/members/dashboard");
-
     } catch (error) {
-      console.error("Login error:", error.message);
       alert("Login failed: " + error.message);
     }
   };
@@ -56,7 +57,6 @@ const MemberLogin = () => {
             required
           />
         </div>
-
         <div>
           <label>Password:</label><br />
           <input
@@ -66,11 +66,10 @@ const MemberLogin = () => {
             required
           />
         </div>
-
         <button type="submit">Login</button>
       </form>
 
-      <div style={{ marginTop: "20px" }}>
+      <div>
         <p>Not a member?</p>
         <button onClick={handleGoBack}>Go back to the main page</button>
       </div>
