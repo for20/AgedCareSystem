@@ -1,0 +1,91 @@
+/* GLOBAL PAGE CONTAINER */
+.welcome-page {
+  background-color: #f4f7fb;
+  min-height: 100vh;
+  padding: 50px 20px;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* HEADER */
+.welcome-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.welcome-header h1 {
+  font-size: 42px;
+  margin: 0;
+  color: #2a2a2a;
+}
+
+.subtitle {
+  font-size: 20px;
+  color: #666;
+  margin-top: 10px;
+}
+
+/* ROLE CARD LAYOUT */
+.role-selection {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.role-box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  width: 300px;
+  height: 300px; /* Increased height for more breathing room */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  line-height: 1.75; /* Improved line spacing */
+}
+
+.role-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.role-box h2 {
+  margin-bottom: 10px;
+  color: #1d3557;
+}
+
+.role-box p {
+  font-size: 15px;
+  color: #333;
+  flex-grow: 1;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+/* BUTTON STYLE */
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.role-box button {
+  padding: 10px 20px;
+  background-color: #1d3557;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.role-box button:hover {
+  background-color: #0b2541;
+}

@@ -33,6 +33,7 @@ const AdminLayout = ({ children }) => {
         <h3>Admin Panel</h3>
         <button onClick={handleGoHome}>Home</button>
         <button onClick={handleGoToUserRegistration}>User Registration</button>
+        <button onClick={() => navigate("/admin/billing")}>Billing</button>
         <button onClick={handleLogout}>Log Out</button>
       </div>
 

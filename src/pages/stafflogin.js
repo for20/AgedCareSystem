@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/firebase";
+import "../styles/login.css";
 
 const StaffLogin = () => {
   const navigate = useNavigate();
@@ -44,35 +45,33 @@ const StaffLogin = () => {
   };
 
   return (
-    <div>
-      <h2>Staff Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label><br />
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Staff Login</h2>
+        <form onSubmit={handleLogin}>
+          <label>Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
 
-        <div>
-          <label>Password:</label><br />
+          <label>Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
+          <button type="submit" className="login-btn">Login</button>
+        </form>
+
+        <div className="login-footer">
+          <p>Not a staff member?</p>
+          <button onClick={handleGoBack} className="back-btn">Go back to the main page</button>
         </div>
-
-        <button type="submit">Login</button>
-      </form>
-
-      <div>
-        <p>Not a staff member?</p>
-        <button onClick={handleGoBack}>Go back to the main page</button>
       </div>
     </div>
   );

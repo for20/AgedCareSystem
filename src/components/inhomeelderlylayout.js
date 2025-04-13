@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firebase";
+import Footer from "./footer";
 
 const InHomeElderlyLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -12,42 +13,39 @@ const InHomeElderlyLayout = ({ children }) => {
     { label: "My Care", path: "/members/elderlyinhome/mycare" },
     { label: "Daily Support", path: "/members/elderlyinhome/dailysupport" },
     { label: "Appointments", path: "/members/elderlyinhome/appointments" },
-    { label: "Messages & Alerts", path: "/members/elderlyinhome/messages" },
-    { label: "Billing & Funding", path: "/members/elderlyinhome/billing" },
+    { label: "Messages", path: "/members/elderlyinhome/messages" },
+    { label: "Billing", path: "/members/elderlyinhome/billing" },
     { label: "Settings & Support", path: "/members/elderlyinhome/settings" }
   ];
 
   const subTabs = {
     "/members/elderlyinhome/mycare": [
-      "Care Plan",
-      "Medication Schedule",
-      "Clinical History",
-      "Telehealth Appointments"
+      { label: "Care Plan", path: "/members/elderlyinhome/mycare/careplan" },
+      { label: "Medication Schedule", path: "/members/elderlyinhome/mycare/medicationschedule" },
+      { label: "Clinical History", path: "/members/elderlyinhome/mycare/clinicalhistory" }
     ],
     "/members/elderlyinhome/dailysupport": [
-      "Service Requests",
-      "Meal Plans",
-      "Activity Calendar",
-      "Companion Services"
+      { label: "Service Requests", path: "/members/elderlyinhome/dailysupport/requests" },
+      { label: "Meal Plans", path: "/members/elderlyinhome/dailysupport/meals" },
+      { label: "Activity Calendar", path: "/members/elderlyinhome/dailysupport/calendar" },
+      { label: "Companion Services", path: "/members/elderlyinhome/dailysupport/companions" }
     ],
     "/members/elderlyinhome/appointments": [
-      "Carer Visit Schedule",
-      "Book a New Appointment",
-      "Appointment History"
-    ],
-    "/members/elderlyinhome/messages": [
-      "Chat with Care Team",
-      "Chat with Family & Friends",
-      "Emergency Contact Access"
+      { label: "Carer Visit Schedule", path: "/members/elderlyinhome/appointments/carervisits" },
+      { label: "Book a New Appointment", path: "/members/elderlyinhome/appointments/book" },
+      { label: "Appointment History", path: "/members/elderlyinhome/appointments/history" }
     ],
     "/members/elderlyinhome/settings": [
-      "Profile",
-      "Help Center / FAQ",
-      "Contact Support"
+      { label: "Profile", path: "/members/elderlyinhome/settings" },
+      { label: "Help Center & FAQ", path: "/members/elderlyinhome/settings/faq" },
+      { label: "Contact Support", path: "/members/elderlyinhome/settings/contact" }
     ]
   };
 
-  const currentSubNav = subTabs[location.pathname] || [];
+  const matchingKey = Object.keys(subTabs).find((basePath) =>
+    location.pathname.startsWith(basePath)
+  );
+  const currentSubNav = matchingKey ? subTabs[matchingKey] : [];
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to log out?");
@@ -59,26 +57,44 @@ const InHomeElderlyLayout = ({ children }) => {
   };
 
   return (
-    <div>
-      {/* Top Nav */}
-      <div>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      {/* Main Nav Bar */}
+      <div className="navbar-main">
         {mainTabs.map((tab) => (
-          <button key={tab.label} onClick={() => navigate(tab.path)}>
+          <button
+            key={tab.label}
+            className={location.pathname.startsWith(tab.path) ? "active-tab" : ""}
+            onClick={() => navigate(tab.path)}
+          >
             {tab.label}
           </button>
         ))}
-        <button onClick={handleLogout}>Log Out</button>
+        <button className="logout-button" onClick={handleLogout}>
+          Log Out
+        </button>
       </div>
 
-      {/* Sub Nav */}
-      <div>
-        {currentSubNav.map((label) => (
-          <button key={label}>{label}</button>
-        ))}
+      {/* Sub Nav Bar */}
+      {currentSubNav.length > 0 && (
+        <div className="navbar-sub">
+          {currentSubNav.map((tab) => (
+            <button
+              key={tab.label}
+              className={location.pathname === tab.path ? "active-subtab" : ""}
+              onClick={() => navigate(tab.path)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Page content in styled flex wrapper */}
+      <div className="page-content">
+        {children}
       </div>
 
-      {/* Main Page Content */}
-      <div>{children}</div>
+      <Footer />
     </div>
   );
 };

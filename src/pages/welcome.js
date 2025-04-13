@@ -1,43 +1,52 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/welcome.css";
 
 const Welcome = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>Welcome to the ACMS Portal</h1>
-      <p>Please log in to continue</p>
+    <div className="welcome-page">
+      <div className="welcome-header">
+        <h1>Welcome to ACMS</h1>
+        <p className="subtitle">Management Made Easy</p>
+      </div>
 
-      <div style={{ display: "flex", gap: "20px", marginTop: "30px" }}>
-        {/* Members Card */}
-        <div>
+      <div className="role-selection">
+        {/* Members */}
+        <div className="role-box">
           <h2>Members</h2>
           <p>
-            If you're an elderly resident or a family member supporting a loved
-            one, please log in through here to stay connected and informed.
+            Elderly residents and family members can access personalized care updates,
+            schedules, and support tools from here.
           </p>
-          <button onClick={() => navigate("/members")}>Members Login</button>
+          <div className="btn-container">
+            <button onClick={() => navigate("/members")}>Login</button>
+          </div>
         </div>
 
-        {/* Staff Card */}
-        <div>
+        {/* Staff */}
+        <div className="role-box">
           <h2>Staff</h2>
           <p>
-            If you’re a caregiver, doctor, or part of our dedicated support
-            team, please log in here to manage care and daily operations.
+            Doctors, caregivers, and support staff can log in to manage daily tasks,
+            appointments, and service coordination.
           </p>
-          <button onClick={() => navigate("/staff")}>Staff Login</button>
+          <div className="btn-container">
+            <button onClick={() => navigate("/staff")}>Login</button>
+          </div>
         </div>
 
-        {/* Admin Card */}
-        <div>
+        {/* Admin */}
+        <div className="role-box">
           <h2>Admin</h2>
           <p>
-            If you are a system administrator, please log in here to access
-            backend controls and manage system settings.
+            System administrators can access backend controls, user registrations,
+            and data management panels securely here.
           </p>
-          <button onClick={() => navigate("/admin")}>Admin Login</button>
+          <div className="btn-container">
+            <button onClick={() => navigate("/admin")}>Login</button>
+          </div>
         </div>
       </div>
     </div>
